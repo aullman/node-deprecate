@@ -7,7 +7,7 @@ function deprecate(methodName, message) {
   if(deprecate.silence || hits[methodName]) return;
   hits[methodName] = true;
 
-  var _deprecate = typeof process === 'undefined' ? browserDeprecate : nodeDeprecate;
+  var _deprecate = typeof process === 'undefined' || !process.stderr ? browserDeprecate : nodeDeprecate;
   _deprecate(methodName, message);
 }
 
@@ -36,7 +36,7 @@ function browserDeprecate(methodName, message) {
   }
 }
 
-if (typeof process !== 'undefined') {
+if (typeof process !== 'undefined' && process.stderr) {
   deprecate.stream = process.stderr;
   deprecate.color = deprecate.stream.isTTY && '\x1b[31;1m';
 }
